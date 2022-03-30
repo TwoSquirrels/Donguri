@@ -17,6 +17,8 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.31"
     // CLI
     application
+    // compile
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 application {
@@ -24,12 +26,14 @@ application {
     mainClass.set(mainClassName)
 }
 
-// tasks
+// user specific tasks
 
 task("debug", JavaExec::class) {
     mainClass.set(mainClassName)
     classpath = java.sourceSets["main"].runtimeClasspath
 }
+
+// libraries
 
 repositories {
     mavenCentral()
@@ -54,4 +58,13 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     // JUnit
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+}
+
+// others
+
+// compile jar
+val jar by tasks.getting(Jar::class) {
+    manifest {
+       attributes["Main-Class"] = mainClassName
+    }
 }
