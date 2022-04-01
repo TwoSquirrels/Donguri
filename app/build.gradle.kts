@@ -98,6 +98,7 @@ distributions {
             // project specific enclosures
             arrayOf(
                 "$rootDir/README.md",
+                "$rootDir/LICENSE",
                 "$rootDir/.env.template"
             ).forEach { from(it) }
         }

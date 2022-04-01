@@ -7,7 +7,7 @@ Invitation URL: (I will post that as soon as it is completed)
 ## License
 
 © 2022 TwoSquirrels  
-[MIT License](/LICENSE)  
+[MIT License](LICENSE)  
 
 ## Screenshots
 
