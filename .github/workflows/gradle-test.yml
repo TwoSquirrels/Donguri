@@ -13,6 +13,8 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
