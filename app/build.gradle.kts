@@ -4,39 +4,30 @@
  *
  * Frequently used tasks
  * - debug      : debug run
+ * - clean      : clean build
  * - shadowJar  : build
- * - build      : build and test
+ * - build      : build and test and dist
  * - run        : run jar
  */
 
 // constants
 
-val groupId = "com.github.twosquirrels"
-val artifactId = "donguri"
-val packageMain = "$groupId.$artifactId.AppKt"
-
-group = groupId
+group = "com.github.twosquirrels"
+val packageMain = "$group.donguri.DonguriKt"
 version = "1.0.0"
 
 plugins {
     // Kotlin/JVM
     id("org.jetbrains.kotlin.jvm") version "1.5.31"
-    // CLI
-    application
     // build
+    application
+    distribution
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 application {
     // define main
     mainClass.set(packageMain)
-}
-
-// user specific tasks
-
-task("debug", JavaExec::class) {
-    mainClass.set(packageMain)
-    classpath = java.sourceSets["main"].runtimeClasspath
 }
 
 // libraries
@@ -53,7 +44,10 @@ dependencies {
     // Java8 stdlib
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    // specific
+    // API
+
+    // dotenv
+    implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
 
     // Java Discord API
     implementation("net.dv8tion:JDA:5.0.0-alpha.9")
@@ -68,9 +62,69 @@ dependencies {
 
 // others
 
-// build jar
+// build
+
+val fileNameBase = "${rootProject.name}-${project.name}"
+val fileNameVersion = "v$version"
+
 val jar by tasks.getting(Jar::class) {
+    archiveBaseName.set(fileNameBase)
+    archiveVersion.set(fileNameVersion)
     manifest {
        attributes["Main-Class"] = packageMain
     }
+}
+
+val shadowJar by tasks.getting(Jar::class) {
+    archiveBaseName.set(fileNameBase)
+    archiveVersion.set(fileNameVersion)
+}
+
+// dist
+
+distributions {
+    main {
+        distributionBaseName.set(fileNameBase)
+        contents {
+            // exclude unshadowed jar
+            exclude {
+                it.file.toRelativeString(projectDir)
+                    .startsWith("build/libs/") &&
+                    !it.name.endsWith("-all.jar")
+            }
+            // exclude libraries
+            exclude {
+                it.file.toRelativeString(rootDir)
+                    .startsWith("../../.gradle/caches/")
+            }
+            // exclude scripts
+            exclude {
+                it.file.toRelativeString(projectDir)
+                    .startsWith("build/scripts/")
+            }
+            // shadowed jar
+            from(tasks.shadowJar)
+            // project specific enclosures
+            arrayOf(
+                "$rootDir/README.md",
+               "$rootDir/.env.template"
+            ).forEach { from(it) }
+        }
+    }
+}
+
+// run
+
+tasks.getByName("run", JavaExec::class) {
+    workingDir = rootDir
+    standardInput = System.`in`
+}
+
+// project specific tasks
+
+task("debug", JavaExec::class) {
+    workingDir = rootDir
+    standardInput = System.`in`
+    mainClass.set(packageMain)
+    classpath = java.sourceSets["main"].runtimeClasspath
 }

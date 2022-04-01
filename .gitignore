@@ -1,3 +1,10 @@
+### User Specific
+
+# dotenv
+.env
+
+### Gradle
+
 # Compiled class file
 *.class
 
