@@ -95,7 +95,7 @@ distributions {
             // exclude libraries
             exclude {
                 it.file.toRelativeString(rootDir)
-                    .startsWith("../../.gradle/caches/")
+                    .contains("../.gradle/caches/")
             }
             // exclude scripts
             exclude {
