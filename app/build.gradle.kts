@@ -18,11 +18,17 @@ version = "1.0.0"
 
 plugins {
     // Kotlin/JVM
-    id("org.jetbrains.kotlin.jvm") version "1.5.31"
+    kotlin("jvm") version "1.6.10"
     // build
     application
     distribution
     id("com.github.johnrengelman.shadow") version "7.1.2"
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 }
 
 application {
@@ -37,27 +43,12 @@ repositories {
 }
 
 dependencies {
-    // standard
-
-    // align Kotlin versions
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    // Java8 stdlib
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
-    // API
-
     // dotenv
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
-
     // Java Discord API
     implementation("net.dv8tion:JDA:5.0.0-alpha.9")
-
     // test
-
-    // Kotlin test
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    // JUnit
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+    testImplementation(kotlin("test"))
 }
 
 // others
@@ -95,7 +86,7 @@ distributions {
             // exclude libraries
             exclude {
                 it.file.toRelativeString(rootDir)
-                    .contains("../.gradle/caches/")
+                    .contains("/.gradle/caches/")
             }
             // exclude scripts
             exclude {
@@ -107,11 +98,12 @@ distributions {
             // project specific enclosures
             arrayOf(
                 "$rootDir/README.md",
-               "$rootDir/.env.template"
+                "$rootDir/.env.template"
             ).forEach { from(it) }
         }
     }
-}
+} 
+
 
 // run
 
