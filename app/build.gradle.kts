@@ -103,8 +103,7 @@ distributions {
             ).forEach { from(it) }
         }
     }
-} 
-
+}
 
 // run
 
