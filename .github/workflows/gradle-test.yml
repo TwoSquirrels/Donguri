@@ -22,7 +22,7 @@ jobs:
       - name: Unzip for artifact
         run: |
           unzip -d artifact/ app/build/distributions/Donguri-app-*.zip
-          basename artifact/* >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=$(basename artifact/*)" >> $GITHUB_ENV
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARTIFACT_NAME }}
