@@ -19,6 +19,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build
+      - name: Unzip for artifact
+        run: |
+          unzip -d artifact/ app/build/distributions/Donguri-app-*.zip
+          basename artifact/* >> $GITHUB_ENV
       - uses: actions/upload-artifact@v3
         with:
-          path: app/build/distributions/Donguri-*.zip
+          name: ${{ env.ARTIFACT_NAME }}
+          path: artifact/Donguri-app-*/**
