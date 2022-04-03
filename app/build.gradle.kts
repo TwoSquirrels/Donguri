@@ -45,6 +45,8 @@ repositories {
 dependencies {
     // dotenv
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
+    // logback
+    implementation("ch.qos.logback:logback-classic:1.2.8")
     // Java Discord API
     implementation("net.dv8tion:JDA:5.0.0-alpha.9")
     // test

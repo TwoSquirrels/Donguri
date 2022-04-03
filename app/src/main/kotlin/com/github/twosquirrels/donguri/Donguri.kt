@@ -6,29 +6,24 @@
 package com.github.twosquirrels.donguri
 
 import com.github.twosquirrels.donguri.discord.Bot
+import org.slf4j.LoggerFactory
 
 class Donguri() {
     val bot = Bot()
 }
 
 fun main() {
-    println("Launching Donguri...")
+    val logger = LoggerFactory.getLogger(Donguri::class.java)
+
+    logger.info("Launching Donguri...")
     val donguri = Donguri()
 
-    // TODO: create a dedicated class
+    // TODO: Dashboard
     do {
-        print("Donguri CMD: ")
-        val command = readLine()!!.toLowerCase()
-        if (command == "") continue
-        println(
-            when (command) {
-                "help" -> "commands: help, invite, ping, stop"
-                "invite" -> "[TODO]"
-                "ping" -> donguri.bot.jda.gatewayPing
-                "stop" -> "Stopping this bot..."
-                else -> "Unknown command: $command."
-            }
-        )
+        print("> ")
+        val command = readLine()!!.lowercase()
     } while (command != "stop")
+
+    logger.info("Shutting down Donguri...")
     donguri.bot.jda.shutdownNow()
 }

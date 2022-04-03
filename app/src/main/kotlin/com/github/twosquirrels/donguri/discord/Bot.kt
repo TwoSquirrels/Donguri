@@ -5,13 +5,14 @@
 
 package com.github.twosquirrels.donguri.discord
 
+import com.github.twosquirrels.donguri.Config
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
-
-import com.github.twosquirrels.donguri.Config
+import org.slf4j.LoggerFactory
 
 class Bot {
+    val logger = LoggerFactory.getLogger(this.javaClass)
     val jda: JDA
 
     init {
@@ -20,6 +21,6 @@ class Bot {
         jdaBuilder.setActivity(Activity.watching(Config.WATCHING))
         jda = jdaBuilder.build()
         jda.awaitReady()
-        println("Ready to Bot!")
+        logger.info("Ready to Bot!")
     }
 }
