@@ -8,22 +8,47 @@ package com.github.twosquirrels.donguri
 import com.github.twosquirrels.donguri.discord.Bot
 import org.slf4j.LoggerFactory
 
+import kotlin.system.exitProcess
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+
 class Donguri() {
-    val bot = Bot()
+    val logger = LoggerFactory.getLogger(this.javaClass)
+    var bot: Bot? = null
+
+    init {
+        logger.info("Launching Donguri...")
+    }
+
+    fun shutdown() {
+        logger.info("Shutting down Donguri...")
+        bot?.jda?.shutdownNow()
+        exitProcess(0)
+    }
 }
 
 fun main() {
-    val logger = LoggerFactory.getLogger(Donguri::class.java)
+    runBlocking {
+        // launch
+        val donguri = Donguri()
 
-    logger.info("Launching Donguri...")
-    val donguri = Donguri()
+        launch(Dispatchers.Default) {
+            Thread.currentThread().name = "LaunchBotThread"
+            donguri.bot = Bot()
+        }
 
-    // TODO: Dashboard
-    do {
-        print("> ")
-        val command = readLine()!!.lowercase()
-    } while (command != "stop")
+        launch(Dispatchers.Default) {
+            Thread.currentThread().name = "LaunchServerThread"
+            // TODO
+        }
 
-    logger.info("Shutting down Donguri...")
-    donguri.bot.jda.shutdownNow()
+        // wait ENTER
+        val ESC = 0x1b.toChar()
+        println("$ESC[33m[HINT]: Press ENTER to shutdown$ESC[m")
+        readLine()
+
+        donguri.logger.info("ENTER was pressed")
+        donguri.shutdown()
+    }
 }

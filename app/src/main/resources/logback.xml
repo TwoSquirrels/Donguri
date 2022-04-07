@@ -3,16 +3,22 @@
 <configuration>
     <timestamp key="time" datePattern="yyyy_MM_dd-HH_mm_ss" />
 
-    <appender name="DASHBOARD"
-        class="com.github.twosquirrels.donguri.Dashboard$LogbackAppender">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%green([%date{HH:mm:ss}]) %cyan([%thread{}/%level{}]): %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/${time}.log</file>
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>[%date{HH:mm:ss}] [%thread{}/%level{}]: %message</pattern>
+            <pattern>[%date{HH:mm:ss}] [%thread{}/%level{}]: %message%n</pattern>
         </encoder>
     </appender>
 
     <root level="info">
-        <appender-ref ref="DASHBOARD" />
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </root>
 </configuration>

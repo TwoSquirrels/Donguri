@@ -43,6 +43,8 @@ repositories {
 }
 
 dependencies {
+    // kotlinx
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
     // dotenv
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
     // logback
